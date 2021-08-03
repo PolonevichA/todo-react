@@ -29,6 +29,7 @@ export default class App extends Component{
         this.createNewItem('Have a lunch')
       ],
       term: '',
+      filter: 'all',
     }
 
     this.deleteItem = (id) => {
@@ -106,13 +107,29 @@ export default class App extends Component{
     this.onSearchChange = (term) => {
       this.setState({ term })
     }
+
+    this.filter = (items, filter) => {
+      console.log(filter)
+      switch(filter){
+        case 'all':
+          return items;
+        case 'active': 
+          return items.filter(item => {
+            return !item.done
+          })
+        case 'done':
+          return items.filter(item => item.done)
+        default:
+          return items
+      }
+    }
   }
 
   
 
   render() {
-    const { todoData, term } = this.state;
-    const visibleItem = this.search(todoData, term)
+    const { todoData, term, filter } = this.state;
+    const visibleItem = this.filter(this.search(todoData, term), filter);
 
     const doneCount = todoData.filter(elem => elem.done).length;
     const doCount = todoData.length - doneCount;
